@@ -1,5 +1,5 @@
-import 'package:componentes/src/framework/colors.dart';
 import 'package:componentes/src/framework/decorations.dart';
+import 'package:componentes/src/models/gradient_color.dart';
 import 'package:flutter/material.dart';
 
 class GradientScreen extends StatefulWidget {
@@ -12,10 +12,23 @@ class _GradientScreenState extends State<GradientScreen> {
   double _beginY = 0.0;
   double _endX = 1.0;
   double _endY = 1.0;
+  List<GradientColor> colors;
+
+  @override
+  void initState() {
+    colors = List<GradientColor>();
+    colors.add(GradientColor(252, 0, 0, 0));
+    colors.add(GradientColor(252, 252, 0, 1));
+    print('El color ${colors[0].color}');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final stops = colors.map((gradientColor) => gradientColor.stop).toList();
+    final colorsList =
+        colors.map((gradientColor) => gradientColor.color).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -26,47 +39,19 @@ class _GradientScreenState extends State<GradientScreen> {
           children: [
             Container(
               margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              width: size.width,
-              height: size.height / 2,
+              width: size.width / 2,
+              height: size.width / 2,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 gradient: LinearGradient(
-                  stops: [0, 1],
-                  colors: [
-                    secondary,
-                    primary,
-                  ],
+                  stops: stops,
+                  colors: colorsList,
+                  // transform: GradientRotation(3.1415 / 2),
                   begin: Alignment(_beginX, _beginY),
                   end: Alignment(_endX, _endY),
                 ),
               ),
-            ),
-            Slider(
-              label: 'Begin X',
-              //divisions: 20,
-              value: _beginX,
-              onChanged: onChangeBeginX,
-            ),
-            Slider(
-              label: 'Begin Y',
-              //divisions: 20,
-              value: _beginY,
-              onChanged: onChangeBeginY,
-            ),
-            Slider(
-              activeColor: Colors.indigo,
-              label: 'Begin Y',
-              //divisions: 20,
-              value: _endX,
-              onChanged: onChangeEndX,
-            ),
-            Slider(
-              activeColor: Colors.indigo,
-              label: 'Begin Y',
-              //divisions: 20,
-              value: _endY,
-              onChanged: onChangeEndY,
             ),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -74,30 +59,18 @@ class _GradientScreenState extends State<GradientScreen> {
               decoration: cardDecoration,
               child: Column(
                 children: [
-                  Text('Stops'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      RaisedButton(
-                        onPressed: () => print('Add Stops'),
-                        color: Colors.blue,
-                        shape: StadiumBorder(),
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text('2'),
-                      RaisedButton(
-                        onPressed: () => print('Add Stops'),
-                        color: Colors.blue,
-                        shape: StadiumBorder(),
-                        child: Icon(
-                          Icons.exposure_minus_1,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
+                  Text('Begin'),
+                  Slider(
+                    label: 'Begin X',
+                    min: -1,
+                    value: _beginX,
+                    onChanged: onChangeBeginX,
+                  ),
+                  Slider(
+                    label: 'Begin Y',
+                    min: -1,
+                    value: _beginY,
+                    onChanged: onChangeBeginY,
                   ),
                 ],
               ),
@@ -108,14 +81,111 @@ class _GradientScreenState extends State<GradientScreen> {
               decoration: cardDecoration,
               child: Column(
                 children: [
-                  Text('Colors'),
-                  ColorSelector(),
+                  Text('End'),
+                  Slider(
+                    activeColor: Colors.indigo,
+                    label: 'Begin Y',
+                    min: -1,
+                    value: _endX,
+                    onChanged: onChangeEndX,
+                  ),
+                  Slider(
+                    activeColor: Colors.indigo,
+                    label: 'Begin Y',
+                    min: -1,
+                    value: _endY,
+                    onChanged: onChangeEndY,
+                  ),
                 ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: EdgeInsets.all(10),
+              decoration: cardDecoration,
+              child: _buildNumberOfColorsControl(),
+            ),
+            _buildColorsList(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ListView _buildColorsList() {
+    return ListView.builder(
+        primary: false,
+        shrinkWrap: true,
+        itemCount: colors.length,
+        itemBuilder: (context, index) {
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: EdgeInsets.all(10),
+            decoration: cardDecoration,
+            child: Column(
+              children: [
+                ColorSelector(
+                  color: colors[index],
+                  onRedColorChange: (value) {
+                    setState(() {
+                      colors[index].setRed(value.toInt());
+                      print('El color: ${colors[0].red}');
+                    });
+                  },
+                  onBlueColorChange: (value) {
+                    setState(() {
+                      colors[index].setBlue(value.toInt());
+                      print('El color: ${colors[0].red}');
+                    });
+                  },
+                  onGreenColorChange: (value) {
+                    setState(() {
+                      colors[index].setGreen(value.toInt());
+                      print('El color: ${colors[0].red}');
+                    });
+                  },
+                  onChangeStop: (value) {
+                    setState(() {
+                      colors[index].setStop(value);
+                    });
+                  },
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  Column _buildNumberOfColorsControl() {
+    return Column(
+      children: [
+        Text('Colors'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            RaisedButton(
+              onPressed: () =>
+                  setState(() => colors.add(GradientColor(255, 0, 0, 0.5))),
+              color: Colors.blue,
+              shape: StadiumBorder(),
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+            ),
+            Text(colors.length.toString()),
+            RaisedButton(
+              onPressed: () => setState(() => colors.removeLast()),
+              color: Colors.blue,
+              shape: StadiumBorder(),
+              child: Icon(
+                Icons.exposure_minus_1,
+                color: Colors.white,
               ),
             ),
           ],
         ),
-      ),
+      ],
     );
   }
 
@@ -125,56 +195,67 @@ class _GradientScreenState extends State<GradientScreen> {
   onChangeEndY(double value) => setState(() => _endY = value);
 }
 
-class ColorSelector extends StatelessWidget {
-  final Function onRedColorChange;
-  final Function onGreenColorChange;
-  final Function onBlueColorChange;
-  final double redValue;
-  final double greenValue;
-  final double blueValue;
+class ColorSelector extends StatefulWidget {
+  final Function(double) onRedColorChange;
+  final Function(double) onGreenColorChange;
+  final Function(double) onBlueColorChange;
+  final Function(double) onChangeStop;
+  final GradientColor color;
 
-  const ColorSelector(
-      {Key key,
-      this.onRedColorChange,
-      this.onGreenColorChange,
-      this.onBlueColorChange,
-      this.redValue,
-      this.greenValue,
-      this.blueValue})
-      : super(key: key);
+  const ColorSelector({
+    Key key,
+    @required this.onRedColorChange,
+    this.onGreenColorChange,
+    @required this.onBlueColorChange,
+    @required this.color,
+    this.onChangeStop,
+  }) : super(key: key);
 
+  @override
+  _ColorSelectorState createState() => _ColorSelectorState();
+}
+
+class _ColorSelectorState extends State<ColorSelector> {
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
-          Text('Color # 1'),
-          Text('RED'),
+          Text('STOP: ${widget.color.stop.toStringAsFixed(2)}'),
+          Slider(
+            activeColor: Colors.black,
+            label: 'Stop',
+            value: widget.color.stop,
+            onChanged: widget.onChangeStop,
+            min: 0,
+            max: 1,
+          ),
+          Text('RED: ${widget.color.red}'),
           Slider(
             activeColor: Colors.red,
             label: 'Begin Y',
             min: 0,
             max: 255,
-            value: redValue,
-            onChanged: onRedColorChange,
+            value: widget.color.red.toDouble(),
+            onChanged: widget.onRedColorChange,
           ),
-          Text('GREEN'),
+          Text('GREEN: ${widget.color.green}'),
           Slider(
             activeColor: Colors.green,
             label: 'Begin Y',
             min: 0,
             max: 255,
-            value: greenValue,
-            onChanged: onGreenColorChange,
+            value: widget.color.green.toDouble(),
+            onChanged: widget.onGreenColorChange,
           ),
-          Text('BLUE'),
+          Text('BLUE: ${widget.color.blue}'),
           Slider(
             activeColor: Colors.blue,
             label: 'Begin Y',
             min: 0,
             max: 255,
-            value: blueValue,
-            onChanged: onBlueColorChange,
+            value: widget.color.blue.toDouble(),
+            onChanged: widget.onBlueColorChange,
           ),
         ],
       ),
