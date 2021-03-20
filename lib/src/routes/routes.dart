@@ -2,6 +2,7 @@ import 'package:componentes/src/screens/alert_screen.dart';
 import 'package:componentes/src/screens/animated_container.dart';
 import 'package:componentes/src/screens/avatar_screen.dart';
 import 'package:componentes/src/screens/card_screen.dart';
+import 'package:componentes/src/screens/contact_me_screen.dart';
 import 'package:componentes/src/screens/gradient_screen.dart';
 import 'package:componentes/src/screens/home_screen.dart';
 import 'package:componentes/src/screens/input_screen.dart';
@@ -21,5 +22,6 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     'slider': (BuildContext context) => SlideScreen(),
     'list': (BuildContext context) => ListScreen(),
     'gradient': (BuildContext context) => GradientScreen(),
+    'me': (BuildContext context) => ContactMeScreen(),
   };
 }

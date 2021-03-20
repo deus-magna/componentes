@@ -38,6 +38,10 @@
             "ruta": "gradient",
             "icon": "list",
             "texto": "Gradientes"
+        }, {
+            "ruta": "me",
+            "icon": "contact",
+            "texto": "Contact Me"
         }
     ]
 }

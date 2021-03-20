@@ -25,6 +25,19 @@ class _GradientScreenState extends State<GradientScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<int> _numeros = List(6);
+    _numeros[0] = 1;
+    _numeros[1] = 2;
+    _numeros[2] = 3;
+    _numeros[3] = 4;
+    _numeros[4] = 5;
+
+    // int _valor = 1;
+    // if (_numeros.contains(_valor)) {
+    //   _numeros.remove(_valor);
+
+    // }
+
     final size = MediaQuery.of(context).size;
     final stops = colors.map((gradientColor) => gradientColor.stop).toList();
     final colorsList =

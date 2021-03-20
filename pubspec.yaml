@@ -26,6 +26,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  # Para acceder a la fuenta Poppins que es la que usa el app
+  google_fonts: ^1.1.1
 
 dev_dependencies:
   flutter_test:
