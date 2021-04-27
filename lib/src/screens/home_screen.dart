@@ -15,7 +15,6 @@ class HomeScreen extends StatelessWidget {
 
   // Crea una lista
   Widget _lista() {
-
     // FutureBuilder nos sirve para esperar la carga de datos y cuando estos se terminan de cargar hacer algo
     // future: la funcion que regresa un Future<>
     // initialData: valor por default mientras se traen los datos
@@ -23,28 +22,24 @@ class HomeScreen extends StatelessWidget {
     return FutureBuilder(
       future: menuProvider.cargarData(),
       initialData: [],
-      builder: ( context, AsyncSnapshot<List<dynamic>> snapshot) {
-        
+      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
         return ListView(
           children: _listaItems(snapshot.data, context),
         );
-
       },
     );
   }
 
   // Tercera forma de cargar items a una lista, usando un forEach
   List<Widget> _listaItems(List<dynamic> data, BuildContext context) {
-
     final List<Widget> opciones = [];
 
-    data.forEach( (opt ) {
-
+    data.forEach((opt) {
       final temp = ListTile(
-        title: Text(opt['texto']),
-        leading: getIcon(opt['icon'] ),
-        trailing:  Icon(Icons.keyboard_arrow_right, color: Colors.blue),
-        onTap: (){
+        title: Text(opt['texto'], style: TextStyle(color: Colors.black)),
+        leading: getIcon(opt['icon']),
+        trailing: Icon(Icons.keyboard_arrow_right, color: Colors.blue),
+        onTap: () {
           // Primera forma de navegacion
           // final route = MaterialPageRoute(
           //   builder: ( context ) => AlertScreen()
